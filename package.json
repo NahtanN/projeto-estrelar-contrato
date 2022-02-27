@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "run": "hardhat run",
     "compile": "hardhat compile",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "deploy": "hardhat node"
   },
   "dependencies": {
     "hardhat": "^2.8.4"
