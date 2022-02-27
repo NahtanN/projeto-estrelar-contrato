@@ -6,7 +6,9 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "deploy": "hardhat node"
+    "deploy": "hardhat node",
+    "local": "npx hardhat run scripts/deploy.ts --network localhost",
+    "rinkeby": "hardhat run scripts/deploy.ts --network rinkeby"
   },
   "dependencies": {
     "hardhat": "^2.8.4"
