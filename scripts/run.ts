@@ -1,27 +1,53 @@
-import { BigNumber } from 'ethers';
-import { ethers } from 'hardhat';
+import { BigNumber } from "ethers";
+import { ethers } from "hardhat";
 
 const main = async () => {
   const [owner, randomPerson] = await ethers.getSigners();
 
-  const starContractFactory = await ethers.getContractFactory('StarPortal');
-  const starContract = await starContractFactory.deploy();
+  const enStarContractFactory = await ethers.getContractFactory(
+    "EnStarProject"
+  );
+  const enStarContract = await enStarContractFactory.deploy();
 
-  await starContract.deployed();
+  await enStarContract.deployed();
 
-  console.log('Contract deployed to:', starContract.address);
-  console.log('Contract deployed by:', owner.address);
+  console.log("Contract deployed to:", enStarContract.address);
+  console.log("Contract deployed by:", owner.address);
 
   let starCount: BigNumber;
-  starCount = await starContract.getTotalStars();
+  starCount = await enStarContract.getTotalStars();
+  console.log(starCount.toNumber());
 
-  let starTxn = await starContract.star();
+  let starTxn = await enStarContract.star("First Star!");
   await starTxn.wait();
 
-  starCount = await starContract.getTotalStars();
+  starTxn = await enStarContract.connect(randomPerson).star("Second Star");
+  await starTxn.wait();
 
-  starTxn = await starContract.connect(randomPerson).star();
-  starCount = await starContract.getTotalStars();
+  starTxn = await enStarContract.connect(randomPerson).star("Third Star");
+  await starTxn.wait();
+
+  starTxn = await enStarContract.connect(randomPerson).star("Fourth Star");
+  await starTxn.wait();
+
+  let allStars = await enStarContract.getAllStars();
+  console.log(allStars);
+
+  let accounts = await enStarContract.getAllAccounts();
+  console.log(accounts);
+
+  starCount = await enStarContract.getTotalStars();
+  console.log(starCount.toNumber());
+
+  let removeAccount = await enStarContract
+    .connect(randomPerson)
+    .removeAccount();
+
+  accounts = await enStarContract.getAllAccounts();
+  console.log(accounts);
+
+  starCount = await enStarContract.getTotalStars();
+  console.log(starCount.toNumber());
 };
 
 const runMain = async () => {
