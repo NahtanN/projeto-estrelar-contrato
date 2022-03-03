@@ -1,18 +1,43 @@
-import { BigNumber } from 'ethers';
-import { ethers } from 'hardhat';
+import { ethers } from "hardhat";
 
 const main = async () => {
   const [deployer] = await ethers.getSigners();
   const accountBalance = await deployer.getBalance();
 
-  console.log('Deploying contracts with account: ', deployer.address);
-  console.log('Account balance: ', accountBalance.toString());
+  console.log("Deploying contracts with account: ", deployer.address);
+  console.log("Account balance: ", accountBalance.toString());
 
-  const starContractFactory = await ethers.getContractFactory('StarPortal');
-  const starContract = await starContractFactory.deploy();
-  await starContract.deployed();
+  // en Contract
+  const enStarContractFactory = await ethers.getContractFactory(
+    "EnStarProject"
+  );
+  const enStarContract = await enStarContractFactory.deploy();
 
-  console.log('Contract deployed to:', starContract.address);
+  await enStarContract.deployed();
+
+  console.log("En contract deployed to:", enStarContract.address);
+
+  // pt-br Contract
+  const ptBrStarContractFactory = await ethers.getContractFactory(
+    "PtBrStarProject"
+  );
+  const ptBrContract = await ptBrStarContractFactory.deploy();
+
+  await ptBrContract.deployed();
+
+  console.log("Pt-br contract deployed to:", ptBrContract.address);
+
+  // es Contract
+  const esStarContractFactory = await ethers.getContractFactory(
+    "EsStarProject"
+  );
+  const esContract = await esStarContractFactory.deploy();
+
+  await esContract.deployed();
+
+  console.log("Es contract deployed to:", esContract.address);
+
+  console.log("Account balance: ", accountBalance.toString());
 };
 
 const runMain = async () => {
