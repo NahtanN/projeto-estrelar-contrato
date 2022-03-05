@@ -5,7 +5,9 @@ const deployEnContract = async () => {
   const enStarContractFactory = await ethers.getContractFactory(
     "EnStarProject"
   );
-  const enStarContract = await enStarContractFactory.deploy();
+  const enStarContract = await enStarContractFactory.deploy({
+    value: ethers.utils.parseEther("1"),
+  });
 
   await enStarContract.deployed();
 
@@ -45,7 +47,8 @@ const main = async () => {
   console.log("Deploying contracts with account: ", deployer.address);
   console.log("Account balance: ", accountBalance.toString());
 
-  await deployPtBrContract();
+  // await deployPtBrContract();
+  await deployEnContract();
 
   console.log("Account balance: ", accountBalance.toString());
 };
