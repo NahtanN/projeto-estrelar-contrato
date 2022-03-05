@@ -8,6 +8,11 @@ contract EnStarProject {
   uint256 private totalStars;
   address[] private accounts;
   Star[] private stars;
+  uint256 private seed;
+
+  constructor() payable {
+    seed = (block.timestamp + block.difficulty) % 100;
+  }
 
   event NewStar(address indexed from, uint256 timestamp, string message);
 
@@ -17,10 +22,28 @@ contract EnStarProject {
     uint256 timestamp; // Quando foi enviada
   }
 
-  function star(string memory _message) public {
-    totalStars += 1;
+  /**
+    Essa estrutura associa um endereço a um número.
+    Nesse Caso, ela associa um endereço com o timestamp da última vez que ele chamou a função star()
+   */
+  mapping(address => uint256) public lastStarAt;
 
+  function star(string memory _message) public {
+    require(lastStarAt[msg.sender] + 15 minutes < block.timestamp, "Wait 15m");
+    lastStarAt[msg.sender] = block.timestamp;
+
+    totalStars += 1;
     stars.push(Star(msg.sender, _message, block.timestamp));
+
+    seed = (block.timestamp + block.difficulty) % 100;
+
+    if (seed <= 50) {
+      uint256 prizeAmount = 0.0001 ether;
+
+      require(prizeAmount <= address(this).balance, "No funds!");
+      (bool success, ) = (msg.sender).call{ value: prizeAmount }("");
+      require(success, "Failed to withdraw money from contract.");
+    }
 
     bool newAccount = true;
 
