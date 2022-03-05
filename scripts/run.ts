@@ -4,50 +4,60 @@ import { ethers } from "hardhat";
 const main = async () => {
   const [owner, randomPerson] = await ethers.getSigners();
 
-  const enStarContractFactory = await ethers.getContractFactory(
-    "EnStarProject"
+  const ptBrStarContractFactory = await ethers.getContractFactory(
+    "PtBrStarProject"
   );
-  const enStarContract = await enStarContractFactory.deploy();
+  const ptBrStarContract = await ptBrStarContractFactory.deploy({
+    value: ethers.utils.parseEther("1"),
+  });
 
-  await enStarContract.deployed();
+  await ptBrStarContract.deployed();
 
-  console.log("Contract deployed to:", enStarContract.address);
+  console.log("Contract deployed to:", ptBrStarContract.address);
   console.log("Contract deployed by:", owner.address);
 
+  let contractBalance = await ethers.provider.getBalance(
+    ptBrStarContract.address
+  );
+  console.log("Contract balance:", ethers.utils.formatEther(contractBalance));
+
   let starCount: BigNumber;
-  starCount = await enStarContract.getTotalStars();
+  starCount = await ptBrStarContract.getTotalStars();
   console.log(starCount.toNumber());
 
-  let starTxn = await enStarContract.star("First Star!");
+  let starTxn = await ptBrStarContract.star("First Star!");
   await starTxn.wait();
 
-  starTxn = await enStarContract.connect(randomPerson).star("Second Star");
+  starTxn = await ptBrStarContract.connect(randomPerson).star("Second Star");
   await starTxn.wait();
 
-  starTxn = await enStarContract.connect(randomPerson).star("Third Star");
+  starTxn = await ptBrStarContract.connect(randomPerson).star("Third Star");
   await starTxn.wait();
 
-  starTxn = await enStarContract.connect(randomPerson).star("Fourth Star");
+  starTxn = await ptBrStarContract.connect(randomPerson).star("Fourth Star");
   await starTxn.wait();
 
-  let allStars = await enStarContract.getAllStars();
+  let allStars = await ptBrStarContract.getAllStars();
   console.log(allStars);
 
-  let accounts = await enStarContract.getAllAccounts();
+  let accounts = await ptBrStarContract.getAllAccounts();
   console.log(accounts);
 
-  starCount = await enStarContract.getTotalStars();
+  starCount = await ptBrStarContract.getTotalStars();
   console.log(starCount.toNumber());
 
-  let removeAccount = await enStarContract
+  let removeAccount = await ptBrStarContract
     .connect(randomPerson)
     .removeAccount();
 
-  accounts = await enStarContract.getAllAccounts();
+  accounts = await ptBrStarContract.getAllAccounts();
   console.log(accounts);
 
-  starCount = await enStarContract.getTotalStars();
+  starCount = await ptBrStarContract.getTotalStars();
   console.log(starCount.toNumber());
+
+  contractBalance = await ethers.provider.getBalance(ptBrStarContract.address);
+  console.log("Contract balance:", ethers.utils.formatEther(contractBalance));
 };
 
 const runMain = async () => {

@@ -9,6 +9,10 @@ contract PtBrStarProject {
   address[] private accounts;
   Star[] private stars;
 
+  constructor() payable {
+    console.log("Deployed!");
+  }
+
   event NewStar(address indexed from, uint256 timestamp, string message);
 
   struct Star {
@@ -33,7 +37,20 @@ contract PtBrStarProject {
 
     if (newAccount) accounts.push(msg.sender);
 
+    // Log na blockchain
     emit NewStar(msg.sender, block.timestamp, _message);
+
+    // Definir recompensa
+    uint256 prizeAmount = 0.0001 ether;
+
+    // Verifica se a condição é verdadeira, se não for lança uma mensagem de erro e sai da função
+    require(prizeAmount <= address(this).balance, "No funds!");
+
+    // Envia o dinheiro para o endereço que chamou o contrato
+    (bool success, ) = (msg.sender).call{ value: prizeAmount }("");
+
+    // Verifica se o envio foi bem sucedido
+    require(success, "Failed to withdraw money from contract.");
   }
 
   function removeAccount() public {
